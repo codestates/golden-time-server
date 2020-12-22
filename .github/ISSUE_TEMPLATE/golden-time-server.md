@@ -1,5 +1,5 @@
 ---
-name: "[Client/Server] feature/00/"
+name: Golden Time Server
 about: Task Card
 title: ''
 labels: ''
