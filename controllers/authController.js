@@ -28,11 +28,11 @@ exports.userInfo = async (req, res) => {};
 exports.google = (req, res) => {};
 
 exports.kakao = async (req, res) => {
-  let code = req.headers["Authentication"];
+  const { authorizationCode } = req.body;
   let redirectUrl = 'http://localhost:3000'
 
   let kakaoTokenRequest = await axios.post(
-    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${redirectUrl}&code=${code}`
+    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${redirectUrl}&code=${authorizationCode}`
   );
 
   let kakaoAccessToken = kakaoTokenRequest.access_token;
@@ -46,14 +46,24 @@ exports.kakao = async (req, res) => {
     }
   );
 
-  let user = await User.create({
+  let kakao = kakaoUserInfo.kakao_account;
+  let userRegister = await User.findOrCreate({
     // db : email, nick, profileImage
-    email: kakaoUserInfo.kakao_account.email,
-    nick: kakaoUserInfo.kakao_account.profile.nickname,
-    profileImage: kakaoUserInfo.kakao_account.profile.profile_image_url,
+    where: { email: kakao.email },
+    defaults: {
+      email: kakao.email,
+      nick: kakao.profile.nickname,
+      profileImage: kakao.profile.profile_image_url,
+    }
   })
 
+  let [ user ] = userRegister;
+  let userId = user.dataValues.id;
+
+  req.session.userId = userId;
+
   res.status(200).send({ 
+    sessionId: userId, // 세션아이디를 클라이언트에게 제공해서 userInfo 요청할때 session아이디로 데이터 찾아와한다. 근데 이게 맞나?
     access_token: kakaoAccessToken,
     redirect_url: '/',
   })
