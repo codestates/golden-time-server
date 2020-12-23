@@ -41,7 +41,7 @@ app.use(
 );
 
 app.use('/auth', authRouter);
-app.use('goods', goodsRouter);
+app.use('/goods', goodsRouter);
 app.use('/comments', commentsRouter);
 app.use('/category', categoryRouter);
 app.use('/search', searchRouter);
