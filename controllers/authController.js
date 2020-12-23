@@ -23,19 +23,7 @@ exports.signin = (req, res) => {};
 
 exports.signout = (req, res) => {};
 
-exports.userInfo = async (req, res) => {
-  const authorization = req.headers["Authencation"];
-  if (!authorization) {
-    res.status(400).json({ messages: "로그인이 필요합니다" });
-  } else {
-    let token = authorization.split(' ')[1];
-
-    let userData = await jwt.verify(token, process.env.JWT_SECRET)
-    if (userData) {
-      res.status(200).send({  })
-    }
-  }
-};
+exports.userInfo = async (req, res) => {};
 
 exports.google = (req, res) => {};
 
