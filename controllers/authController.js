@@ -28,15 +28,14 @@ exports.userInfo = async (req, res) => {};
 exports.google = (req, res) => {};
 
 exports.kakao = async (req, res) => {
+  console.log('코드확인', req.body.authorizationCode);
   const { authorizationCode } = req.body;
-  let redirectUrl = 'http://localhost:3000'
 
   let kakaoTokenRequest = await axios.post(
-    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${redirectUrl}&code=${authorizationCode}`
+    `https://kauth.kakao.com/oauth/token?code=${authorizationCode}&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000&grant_type=authorization_code`
   );
 
-  let kakaoAccessToken = kakaoTokenRequest.access_token;
-  // let kakaoRefreshToken = kakaoTokenRequest.refresh_token;
+  let kakaoAccessToken = kakaoTokenRequest.data.access_token;
 
   let kakaoUserInfo = await axios.get(
     "https://kapi.kakao.com/v2/user/me", {
@@ -45,15 +44,20 @@ exports.kakao = async (req, res) => {
       }
     }
   );
+  
+  let kakao = kakaoUserInfo.data;
 
-  let kakao = kakaoUserInfo.kakao_account;
+  let Email = kakao.kakao_account.email;
+  let Nick = kakao.properties.nickname;
+  let profileImage = kakao.properties.profile_image;
+
   let userRegister = await User.findOrCreate({
-    // db : email, nick, profileImage
-    where: { email: kakao.email },
+    where: { email: Email },
     defaults: {
-      email: kakao.email,
-      nick: kakao.profile.nickname,
-      profileImage: kakao.profile.profile_image_url,
+      email: Email,
+      nick: Nick,
+      profileImage: profileImage,
+      provide: 'kakao',
     }
   })
 
