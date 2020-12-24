@@ -13,6 +13,7 @@ router.patch(
   authController.auth.modify,
 );
 router.post('/signout', authController.auth.signout);
+router.get('/user', passport.authenticate('jwt', { session: false }), authController.auth.userInfo);
 
 
 module.exports = router;
