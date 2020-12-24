@@ -43,7 +43,20 @@ exports.signin = (req, res, next) => {
   })(req, res, next);
 };
 
-exports.signout = (req, res) => {};
+exports.signout = (req, res) => {
+  // console.log(req.cookies)
+  if (Object.keys(req.cookies).length === 0) {
+    // console.log('에러')
+    res.status(400).send({ message: 'not authorized' });
+  } else {
+    // console.log('로그아웃 완료')
+    req.session.destroy(() => {
+      req.session;
+    });
+    res.clearCookie();
+    res.send({ message: 'successfully LOGOUT!' })
+  }
+};
 
 exports.userInfo = (req, res) => {};
 
