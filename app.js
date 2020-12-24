@@ -4,8 +4,10 @@ const logger = require('morgan');
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const session = require('express-session');
-const { sequelize } = require('./models');
+const passport = require('passport');
 
+const { sequelize } = require('./models');
+const passportConfig = require('./passport');
 const authRouter = require('./routes/auth');
 const goodsRouter = require('./routes/goods');
 const commentsRouter = require('./routes/comments');
@@ -14,6 +16,7 @@ const searchRouter = require('./routes/search');
 
 const app = express();
 sequelize.sync();
+passportConfig(passport);
 
 const { PORT, COOKIE_SECRET } = process.env;
 
@@ -39,9 +42,11 @@ app.use(
     },
   }),
 );
+app.use(passport.initialize());
+app.use(passport.session());
 
 app.use('/auth', authRouter);
-app.use('goods', goodsRouter);
+app.use('/goods', goodsRouter);
 app.use('/comments', commentsRouter);
 app.use('/category', categoryRouter);
 app.use('/search', searchRouter);
