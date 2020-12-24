@@ -5,7 +5,6 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const axios = require('axios');
 
-
 exports.signup = async (req, res) => {
   const { email, nick, password } = req.body;
   if (!email || !nick || !password) return res.status(400).send('error');
@@ -62,18 +61,25 @@ exports.signout = (req, res) => {
       req.session;
     });
     res.clearCookie();
-    res.send({ message: 'successfully LOGOUT!' })
+    res.send({ message: 'successfully LOGOUT!' });
   }
 };
 
 exports.userInfo = (req, res) => {
-  console.log('작동확인',req.user.dataValues);
+  console.log('작동확인', req.user.dataValues);
 
-  let { id, email, nick, profileImage, provider, createdAt } = req.user.dataValues;
+  let {
+    id,
+    email,
+    nick,
+    profileImage,
+    provider,
+    createdAt,
+  } = req.user.dataValues;
   console.log(req.user.dataValues);
 
   res.status(200).json({
-    id, 
+    id,
     email,
     nick,
     profile: profileImage,
@@ -102,18 +108,20 @@ exports.google = async (req, res) => {
       },
     });
     const [user, created] = exUser;
+
     const token = jwt.sign(
       {
         id: user.id,
         nick: user.nick,
         email: user.email,
-        provider: updateInfo.provider,
+        provider: user.provider,
         profileImage: user.profileImage,
       },
       process.env.JWT_SECRET,
       { expiresIn: '7d' },
     );
-    res.status(200).json({ access_token: token });
+
+    res.status(200).cookie('access_token', token).json({ access_token: token });
   } catch (err) {
     res.status(400).json({ message: '' });
   }
@@ -121,48 +129,49 @@ exports.google = async (req, res) => {
 
 exports.kakao = async (req, res) => {
   const { authorizationCode } = req.body;
-  let redirectUrl = 'http://localhost:3000'
+  let redirectUrl = 'http://localhost:3000';
 
   let kakaoTokenRequest = await axios.post(
-    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${redirectUrl}&code=${authorizationCode}`
+    `https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=${redirectUrl}&code=${authorizationCode}`,
   );
 
   let kakaoAccessToken = kakaoTokenRequest.access_token;
-  // let kakaoRefreshToken = kakaoTokenRequest.refresh_token;
 
-  let kakaoUserInfo = await axios.get(
-    "https://kapi.kakao.com/v2/user/me", {
-      headers: {
-        Authorization: `Bearer ${kakaoAccessToken}`
-      }
-    }
-  );
+  let kakaoUserInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
+    headers: {
+      Authorization: `Bearer ${kakaoAccessToken}`,
+    },
+  });
 
   let kakao = kakaoUserInfo.kakao_account;
   let userRegister = await User.findOrCreate({
-    // db : email, nick, profileImage
     where: { email: kakao.email },
     defaults: {
       email: kakao.email,
       nick: kakao.profile.nickname,
       profileImage: kakao.profile.profile_image_url,
-    }
-  })
+      provider: 'kakao',
+    },
+  });
 
-  let [ user ] = userRegister;
+  let [user] = userRegister;
   let { id, email, nick } = user.dataValues;
 
-  let localToken = await jwt.sign({
-    id: id,
-    email: email,
-    nick: nick,
-  }, process.env.JWT_SECRET, { expiresIn: '7d' })
+  let localToken = await jwt.sign(
+    {
+      id: id,
+      email: email,
+      nick: nick,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' },
+  );
 
-  res.status(200)
-  .cookie('access_token', localToken)
-  .json({ access_token: localToken, redirect_url: '/' })
+  res
+    .status(200)
+    .cookie('access_token', localToken)
+    .json({ access_token: localToken, redirect_url: '/' });
 };
-
 
 exports.modify = async (req, res) => {
   const { nick, image } = req.body;
@@ -181,6 +190,5 @@ exports.modify = async (req, res) => {
     process.env.JWT_SECRET,
     { expiresIn: '7d' },
   );
-  res.status(200).json({ token });
+  res.status(200).cookie('access_token', token).json({ access_token: token });
 };
-
