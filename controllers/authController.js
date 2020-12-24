@@ -66,10 +66,9 @@ exports.kakao = async (req, res) => {
     nick: nick,
   }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
-  res.status(200).send({ 
-    access_token: localToken,
-    redirect_url: '/',
-  })
+  res.status(200)
+  .cookie('access_token', localToken)
+  .json({ access_token: localToken, redirect_url: '/' })
 };
 
 exports.modify = (req, res) => {};
