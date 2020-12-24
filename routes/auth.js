@@ -12,5 +12,7 @@ router.patch(
   passport.authenticate('jwt', { session: false }),
   authController.auth.modify,
 );
+router.post('/signout', authController.auth.signout);
+
 
 module.exports = router;
