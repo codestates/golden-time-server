@@ -60,7 +60,21 @@ exports.signout = (req, res) => {
   }
 };
 
-exports.userInfo = async (req, res) => {};
+exports.userInfo = (req, res) => {
+  console.log('작동확인',req.user.dataValues);
+
+  let { id, email, nick, profileImage, provider, createdAt } = req.user.dataValues;
+  console.log(req.user.dataValues);
+
+  res.status(200).json({
+    id, 
+    email,
+    nick,
+    profile: profileImage,
+    provider,
+    createdAt,
+  });
+};
 
 // exports.google = (req, res) => {};
 
