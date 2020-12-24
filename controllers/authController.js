@@ -58,13 +58,16 @@ exports.kakao = async (req, res) => {
   })
 
   let [ user ] = userRegister;
-  let userId = user.dataValues.id;
+  let { id, email, nick } = user.dataValues;
 
-  req.session.userId = userId;
+  let localToken = await jwt.sign({
+    id: id,
+    email: email,
+    nick: nick,
+  }, process.env.JWT_SECRET, { expiresIn: '7d' })
 
   res.status(200).send({ 
-    sessionId: userId, // 세션아이디를 클라이언트에게 제공해서 userInfo 요청할때 session아이디로 데이터 찾아와한다. 근데 이게 맞나?
-    access_token: kakaoAccessToken,
+    access_token: localToken,
     redirect_url: '/',
   })
 };
