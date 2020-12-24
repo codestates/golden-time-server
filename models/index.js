@@ -22,6 +22,7 @@ db.GoodsImage = require('./goodsImage')(sequelize, Sequelize);
 db.Comment = require('./comment')(sequelize, Sequelize);
 db.Category = require('./category')(sequelize, Sequelize);
 
+
 db.User.hasMany(db.Goods, {
   foreignKey: 'userId',
 });

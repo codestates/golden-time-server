@@ -13,10 +13,13 @@ const goodsRouter = require('./routes/goods');
 const commentsRouter = require('./routes/comments');
 const categoryRouter = require('./routes/category');
 const searchRouter = require('./routes/search');
+const { sequelize } = require('./models');
+const configPassport = require('./passport');
 
 const app = express();
 sequelize.sync();
-passportConfig(passport);
+configPassport(passport);
+
 
 const { PORT, COOKIE_SECRET } = process.env;
 
@@ -25,16 +28,16 @@ app.use(express.json());
 app.use(
   cors({
     origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'OPTIONS', 'DELETE'],
+    methods: ['GET', 'POST', 'OPTIONS'],
     credentials: true,
   }),
 );
 app.use(cookieParser(COOKIE_SECRET));
 app.use(
   session({
-    secret: COOKIE_SECRET,
     resave: false,
     saveUninitialized: true,
+    secret: COOKIE_SECRET,
     cookie: {
       httpOnly: true,
       secure: false,
