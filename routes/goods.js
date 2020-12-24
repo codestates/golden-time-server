@@ -9,5 +9,10 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   goodsController.goods.addGoods,
 );
+router.patch(
+  '/modified',
+  passport.authenticate('jwt', { session: false }),
+  goodsController.goods.modifiedGoods,
+);
 
 module.exports = router;
