@@ -59,22 +59,16 @@ exports.signout = (req, res) => {
 };
 
 exports.userInfo = (req, res) => {
-  // local login시
-  let token = req.headers.authorization.split(' ')[1];
-  console.log('token은, ', token);
-  
-  let verify = await jwt.verify(token, process.env.JWT_SECRET)
-  // userData : id, nick, email
-  let userInfo = await User.findOne({ where: { id: verify.id } });
-  let { id, email, nick, profile, createdAt } = userInfo.dataValues;
-  // console.log(id, email, nick, profile);
+  console.log('작동확인',req.user.dataValues);
+
+  let { id, email, nick, profileImage, createdAt } = req.user.dataValues;
 
   res.status(200).json({
-    id: id, 
-    email: email,
-    nick: nick,
-    profile: profile,
-    createdAt: createdAt,
+    id, 
+    email,
+    nick,
+    profile: profileImage,
+    createdAt,
   });
 };
 
