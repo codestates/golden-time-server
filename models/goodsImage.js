@@ -1,17 +1,17 @@
 module.exports = (sequelize, DataTypes) =>
   sequelize.define(
-    "goodsImage",
+    'goodsImage',
     {
       imagePath: {
         type: DataTypes.STRING(),
         allowNull: false,
       },
-      postId: {
+      goodsId: {
         type: DataTypes.INTEGER(),
         allowNull: false,
       },
     },
     {
       paranoid: true,
-    }
+    },
   );

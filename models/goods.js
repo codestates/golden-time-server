@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) =>
   sequelize.define(
-    "goods",
+    'goods',
     {
       userId: {
         type: DataTypes.INTEGER(),
@@ -30,6 +30,10 @@ module.exports = (sequelize, DataTypes) =>
         type: DataTypes.INTEGER(),
         allowNull: true,
       },
+      thumbnail: {
+        type: DataTypes.INTEGER(),
+        allowNull: false,
+      },
       closing_time: {
         type: DataTypes.DATE(),
         allowNull: false,
@@ -38,5 +42,5 @@ module.exports = (sequelize, DataTypes) =>
     {
       paranoid: true,
       timestamps: true,
-    }
+    },
   );

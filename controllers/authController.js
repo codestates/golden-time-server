@@ -18,7 +18,7 @@ exports.signup = async (req, res) => {
   if (created) {
     res.status(201).json({ redirect_url: '/' });
   } else {
-    res.redirect('http://localhost:3000');
+    res.status(400).json({ message: '이미 가입된 회원입니다.' });
   }
 };
 
@@ -33,7 +33,13 @@ exports.signin = (req, res, next) => {
     return req.login(user, (err) => {
       if (err) return next(err);
       const token = jwt.sign(
-        { id: user.id, nick: user.nick, email: user.email },
+        {
+          id: user.id,
+          nick: user.nick,
+          email: user.email,
+          provider: updateInfo.provider,
+          profileImage: user.profileImage,
+        },
         process.env.JWT_SECRET,
         { expiresIn: '7d' },
       );
@@ -76,7 +82,42 @@ exports.userInfo = (req, res) => {
   });
 };
 
-// exports.google = (req, res) => {};
+exports.google = async (req, res) => {
+  try {
+    const { authorizationCode } = req.body;
+    const googleToken = await axios.post(
+      `https://oauth2.googleapis.com/token?client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_SECRET_KEY}&code=${authorizationCode}&grant_type=authorization_code&redirect_uri=http://localhost:3000`,
+    );
+    const { access_token } = googleToken.data;
+    const googleData = await axios.get(
+      `https://www.googleapis.com/oauth2/v2/userinfo?access_token=${access_token}`,
+    );
+    const exUser = await User.findOrCreate({
+      where: { email: googleData.data.email },
+      defaults: {
+        nick: googleData.data.name,
+        snsId: googleData.data.id,
+        profileImage: googleData.data.picture,
+        provider: 'google',
+      },
+    });
+    const [user, created] = exUser;
+    const token = jwt.sign(
+      {
+        id: user.id,
+        nick: user.nick,
+        email: user.email,
+        provider: updateInfo.provider,
+        profileImage: user.profileImage,
+      },
+      process.env.JWT_SECRET,
+      { expiresIn: '7d' },
+    );
+    res.status(200).json({ access_token: token });
+  } catch (err) {
+    res.status(400).json({ message: '' });
+  }
+};
 
 exports.kakao = async (req, res) => {
   const { authorizationCode } = req.body;
@@ -122,4 +163,24 @@ exports.kakao = async (req, res) => {
   .json({ access_token: localToken, redirect_url: '/' })
 };
 
-// exports.modify = (req, res) => {};
+
+exports.modify = async (req, res) => {
+  const { nick, image } = req.body;
+  const updateInfo = await User.update(
+    { nick, profileImage: image },
+    { where: { id: req.user.id } },
+  );
+  const token = jwt.sign(
+    {
+      id: updateInfo.id,
+      nick: updateInfo.nick,
+      emai: updateInfo.email,
+      provider: updateInfo.provider,
+      profileImage: updateInfo.profileImage,
+    },
+    process.env.JWT_SECRET,
+    { expiresIn: '7d' },
+  );
+  res.status(200).json({ token });
+};
+
