@@ -1,6 +1,6 @@
-const { Goods, GoodsImage } = require('../models');
+const { Goods, GoodsImage } = require('../../models');
 
-exports.addGoods = async (req, res) => {
+module.exports = async (req, res) => {
   const {
     userId,
     title,
