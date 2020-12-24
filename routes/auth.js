@@ -7,6 +7,7 @@ const router = express.Router();
 router.post('/signup', authController.auth.signup);
 router.post('/signin', authController.auth.signin);
 router.post('/google', authController.auth.google);
+router.post('/kakao', authController.auth.kakao)
 router.patch(
   '/modifieduser',
   passport.authenticate('jwt', { session: false }),

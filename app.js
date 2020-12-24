@@ -13,7 +13,7 @@ const goodsRouter = require('./routes/goods');
 const commentsRouter = require('./routes/comments');
 const categoryRouter = require('./routes/category');
 const searchRouter = require('./routes/search');
-const { sequelize } = require('./models');
+// const { sequelize } = require('./models');
 const configPassport = require('./passport');
 
 const app = express();
