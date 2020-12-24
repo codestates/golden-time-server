@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) =>
   sequelize.define(
-    "comment",
+    'comment',
     {
       userId: {
         type: DataTypes.INTEGER(),
@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) =>
         type: DataTypes.STRING(),
         allowNUll: false,
       },
-      postId: {
+      goodsId: {
         type: DataTypes.INTEGER(),
         allowNull: false,
       },
@@ -18,5 +18,5 @@ module.exports = (sequelize, DataTypes) =>
     {
       paranoid: true,
       timestamps: true,
-    }
+    },
   );
