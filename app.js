@@ -12,10 +12,6 @@ const goodsRouter = require('./routes/goods');
 const commentsRouter = require('./routes/comments');
 const categoryRouter = require('./routes/category');
 const searchRouter = require('./routes/search');
-<<<<<<< HEAD
-// const { sequelize } = require('./models');
-=======
->>>>>>> 7e2a37073861d9cb281fa0aad075b4d81d567625
 const configPassport = require('./passport');
 
 const app = express();
