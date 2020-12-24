@@ -1,6 +1,6 @@
 module.exports = (sequelize, DataTypes) =>
   sequelize.define(
-    "user",
+    'user',
     {
       email: {
         type: DataTypes.STRING(50),
@@ -18,7 +18,7 @@ module.exports = (sequelize, DataTypes) =>
       provider: {
         type: DataTypes.STRING(10),
         allowNull: false,
-        defaultValue: "local",
+        defaultValue: 'local',
       },
       snsId: {
         type: DataTypes.STRING(50),
@@ -36,5 +36,5 @@ module.exports = (sequelize, DataTypes) =>
     {
       paranoid: true,
       timestamps: true,
-    }
+    },
   );

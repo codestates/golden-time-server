@@ -7,19 +7,20 @@ const session = require('express-session');
 const passport = require('passport');
 
 const { sequelize } = require('./models');
-const passportConfig = require('./passport');
 const authRouter = require('./routes/auth');
 const goodsRouter = require('./routes/goods');
 const commentsRouter = require('./routes/comments');
 const categoryRouter = require('./routes/category');
 const searchRouter = require('./routes/search');
+<<<<<<< HEAD
 // const { sequelize } = require('./models');
+=======
+>>>>>>> 7e2a37073861d9cb281fa0aad075b4d81d567625
 const configPassport = require('./passport');
 
 const app = express();
 sequelize.sync();
 configPassport(passport);
-
 
 const { PORT, COOKIE_SECRET } = process.env;
 
