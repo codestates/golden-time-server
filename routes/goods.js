@@ -14,5 +14,9 @@ router.patch(
   passport.authenticate('jwt', { session: false }),
   goodsController.goods.modifiedGoods,
 );
+router.get(
+  '/:id',
+  goodsController.goods.goodsDetail,
+);
 
 module.exports = router;
