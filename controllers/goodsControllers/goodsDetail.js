@@ -1,4 +1,4 @@
-const { Goods, GoodsImage } = require('../../models');
+const { Goods, GoodsImage, Comment } = require('../../models');
 
 module.exports = async (req, res) => {
   console.log('id 확인',req.params.id)
@@ -8,18 +8,27 @@ module.exports = async (req, res) => {
       {
         model: GoodsImage,
         required: false,
+        attributes: ['imagePath'],
         where: {
-          id: req.params.id,
+          goodsId: req.params.id,
         },
-        // attributes: ['username'],
-      }
-      // {
-      //   model: locations,
-      //   required: false,
-      //   attributes: ['location1', 'location2', 'location3', 'location4', 'location5'],
-      // }, // 2중 조인
-    ]
-  })
+      },
+      {
+        model: Comment,
+        required: false,
+        attributes: ['userId', 'commentMessage', 'createdAt'],
+        where: {
+          goodsId: req.params.id,
+        }
+      },
+    ],
+    where: {
+      id: req.params.id,
+    },
+  }) // 여기까진 데이터 불러오기 성공
+  
+  // task : comment에서 userId 받아온 걸로 user테이블에서 유저 닉네임 찾아서 클라이언트에게 보내줘야 함
 
-  console.log(leftJoinTest);
+  let [ goods ] = leftJoinTest;
+  console.log(goods);
 }
