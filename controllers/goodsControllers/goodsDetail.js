@@ -18,6 +18,7 @@ module.exports = async (req, res) => {
         attributes: ['id', 'userId', 'commentMessage', 'createdAt'],
         where: {
           goodsId: req.params.id,
+          deletedAt: null,
         }
       },
     ],
