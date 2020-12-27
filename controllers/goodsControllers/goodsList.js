@@ -1,6 +1,6 @@
 const { User, Goods } = require('../../models');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
     const goods = await Goods.findAll({
       attributes: ['id', 'title', 'text', 'price', 'categoryId', 'createdAt'],
@@ -12,5 +12,7 @@ module.exports = async (req, res) => {
       ],
     });
     res.status(200).json(goods);
-  } catch {}
+  } catch (err) {
+    next(err);
+  }
 };

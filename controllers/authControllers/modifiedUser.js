@@ -1,15 +1,30 @@
 require('dotenv').config();
 const jwt = require('jsonwebtoken');
+const fs = require('fs');
+const path = require('path');
 const { User } = require('../../models');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
-    console.log(req.body);
     const { nick } = req.body;
-    const updateInfo = await User.update(
+    const findImage = await User.findOne({
+      where: { id: req.user.id },
+      attributes: ['profileImage'],
+    });
+
+    if (findImage.profileImage && findImage.profileImage.includes('uploads')) {
+      fs.unlink(
+        path.join(__dirname, '../..', findImage.profileImage),
+        (err) => {
+          if (err) throw err;
+        },
+      );
+    }
+    await User.update(
       { nick, profileImage: req.file.path },
       { where: { id: req.user.id } },
     );
+    const updateInfo = await User.findOne({ where: { id: req.user.id } });
     const token = jwt.sign(
       {
         id: updateInfo.id,
@@ -22,7 +37,7 @@ module.exports = async (req, res) => {
       { expiresIn: '7d' },
     );
     res.status(200).cookie('access_token', token).json({ access_token: token });
-  } catch (error) {
-    console.error(error);
+  } catch (err) {
+    next(err);
   }
 };

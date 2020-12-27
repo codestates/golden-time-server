@@ -1,14 +1,16 @@
 const fs = require('fs');
 
 module.exports = (req, res) => {
-  console.log(req.user.id);
-  const { id, email, nick, profileImage, provider, createdAt } = req.user;
+  console.log(req.user);
+  const { id, email, nick, profileImage, provider, area, createdAt } = req.user;
+
   res.status(200).json({
     id,
     email,
     nick,
     profileImage,
     provider,
+    area,
     createdAt,
   });
 };

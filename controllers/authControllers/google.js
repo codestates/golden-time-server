@@ -3,9 +3,9 @@ const jwt = require('jsonwebtoken');
 const { User } = require('../../models');
 const axios = require('axios');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
-    const { authorizationCode } = req.body;
+    const { authorizationCode, area } = req.body;
     const googleToken = await axios.post(
       `https://oauth2.googleapis.com/token?client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_SECRET_KEY}&code=${authorizationCode}&grant_type=authorization_code&redirect_uri=http://localhost:3000`,
     );
@@ -19,6 +19,7 @@ module.exports = async (req, res) => {
         nick: googleData.data.name,
         snsId: googleData.data.id,
         profileImage: googleData.data.picture,
+        area,
         provider: 'google',
       },
     });
@@ -30,14 +31,15 @@ module.exports = async (req, res) => {
         nick: user.nick,
         email: user.email,
         provider: user.provider,
+        area: user.area,
         profileImage: user.profileImage,
       },
       process.env.JWT_SECRET,
       { expiresIn: '7d' },
     );
-
+    console.log(token);
     res.status(200).cookie('access_token', token).json({ access_token: token });
   } catch (err) {
-    res.status(400).json({ message: '' });
+    next(err);
   }
 };

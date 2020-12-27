@@ -1,5 +1,3 @@
-const passport = require('passport');
-
 require('dotenv').config();
 const JWTStrategy = require('passport-jwt').Strategy;
 const ExtractJwt = require('passport-jwt').ExtractJwt;
@@ -14,7 +12,7 @@ module.exports = (passport) => {
       },
       async (jwt_payload, done) => {
         try {
-          const exUser = await User.findOne({ id: jwt_payload.id });
+          const exUser = await User.findOne({ where: { id: jwt_payload.id } });
           if (!exUser) {
             done(null, false);
           } else {
