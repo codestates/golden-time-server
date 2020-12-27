@@ -4,7 +4,7 @@ const axios = require('axios');
 const { User } = require('../../models');
 
 module.exports = async (req, res) => {
-  const { authorizationCode } = req.body;
+  const { authorizationCode, area } = req.body;
 
   let kakaoTokenRequest = await axios.post(
     `https://kauth.kakao.com/oauth/token?code=${authorizationCode}&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000&grant_type=authorization_code`,
@@ -26,17 +26,19 @@ module.exports = async (req, res) => {
     defaults: {
       email: Email,
       nick: Nick,
-      profileImage: profileImage,
-      provide: 'kakao',
+      profileImage,
+      provider: 'kakao',
+      area,
     },
   });
-  let [user] = userRegister;
-  let { id, email, nick } = user.dataValues;
+  let [ user ] = userRegister;
+  let { id, email, nick, area } = user.dataValues;
   let localToken = await jwt.sign(
     {
-      id: id,
-      email: email,
-      nick: nick,
+      id,
+      email,
+      nick,
+      area,
     },
     process.env.JWT_SECRET,
     { expiresIn: '7d' },

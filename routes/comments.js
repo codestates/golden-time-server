@@ -1,6 +1,12 @@
 const express = require('express');
-const commentsRouter = require('../controllers');
+const commentsController = require('../controllers');
 
 const router = express.Router();
+
+router.delete(
+  '/deleteComment',
+  passport.authenticate('jwt', { session: false }),
+  commentsController.comments.deleteComment
+);
 
 module.exports = router;
