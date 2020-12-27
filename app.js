@@ -21,11 +21,12 @@ configPassport(passport);
 const { PORT, COOKIE_SECRET } = process.env;
 
 app.use(logger('dev'));
+app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
   cors({
     origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'OPTIONS'],
+    methods: ['GET', 'POST', 'OPTIONS', 'PATCH'],
     credentials: true,
   }),
 );
@@ -44,6 +45,7 @@ app.use(
 );
 app.use(passport.initialize());
 app.use(passport.session());
+app.use('/uploads', express.static('./uploads'));
 
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
