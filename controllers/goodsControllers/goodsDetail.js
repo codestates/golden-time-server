@@ -1,9 +1,8 @@
-const { Goods, GoodsImage, Comment } = require('../../models');
+const { User, Goods, GoodsImage, Comment } = require('../../models');
+const user = require('../../models/user');
 
 module.exports = async (req, res) => {
-  console.log('id 확인',req.params.id)
-
-  const leftJoinTest = await Goods.findAll({
+  const findGoods = await Goods.findAll({
     include: [
       {
         model: GoodsImage,
@@ -25,10 +24,48 @@ module.exports = async (req, res) => {
     where: {
       id: req.params.id,
     },
-  }) // 여기까진 데이터 불러오기 성공
-  
-  // task : comment에서 userId 받아온 걸로 user테이블에서 유저 닉네임 찾아서 클라이언트에게 보내줘야 함
+  })
 
-  let [ goods ] = leftJoinTest;
-  console.log(goods);
-}
+  const [ goodsDetail ] = findGoods;
+  const { id, userId, title, text, bidder, price, bidPrice, closing_time, images, comments } = goodsDetail;
+
+  const userInfo = await User.findOne( {
+    where: { id: userId }
+  });
+
+  const commentUserInfo = [];
+  for (let i = 0; i < comments.length; i += 1) {
+    let oneComment = {};
+
+    let findUser = await User.findOne({
+      where: comments[i].userId,
+    });
+
+    console.log(findUser.id);
+
+    oneComment.userId = comments[i].userId;
+    oneComment.nick = findUser.nick;
+    oneComment.commentMessage = comments[i].commentMessage;
+    oneComment.createdAt = comments[i].createdAt;
+
+    commentUserInfo.push(oneComment);
+  };
+
+  res.status(200)
+  .json({
+    id,
+    title,
+    text,
+    bidder,
+    price,
+    bidPrice,
+    closing_time,
+    images,
+    comments: commentUserInfo,
+    user: {
+      userId: userInfo.id,
+      nick: userInfo.nick,
+      profile_image: userInfo.profileImage,
+    },
+  });
+};
