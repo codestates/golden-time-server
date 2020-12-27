@@ -1,5 +1,6 @@
 const express = require('express');
 const commentsController = require('../controllers');
+const passport = require('passport');
 
 const router = express.Router();
 

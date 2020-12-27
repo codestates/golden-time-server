@@ -30,11 +30,11 @@ db.Goods.belongsTo(db.User);
 db.Goods.hasMany(db.GoodsImage, {
   foreignKey: 'goodsId',
 });
-db.GoodsImage.belongsTo(db.Goods);
+// db.GoodsImage.belongsTo(db.Goods);
 db.Goods.hasMany(db.Comment, {
   foreignKey: 'goodsId',
 });
-db.Comment.belongsTo(db.Goods);
+// db.Comment.belongsTo(db.Goods);
 db.Category.hasMany(db.Goods, {
   foreignKey: 'categoryId',
 });

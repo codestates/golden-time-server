@@ -32,13 +32,14 @@ module.exports = async (req, res) => {
     },
   });
   let [ user ] = userRegister;
-  let { id, email, nick, area } = user.dataValues;
+  let { id, email, nick } = user;
+  let Area = user.area;
   let localToken = await jwt.sign(
     {
       id,
       email,
       nick,
-      area,
+      area: Area,
     },
     process.env.JWT_SECRET,
     { expiresIn: '7d' },
