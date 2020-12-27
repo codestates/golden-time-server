@@ -15,7 +15,7 @@ module.exports = async (req, res) => {
       {
         model: Comment,
         required: false,
-        attributes: ['userId', 'commentMessage', 'createdAt'],
+        attributes: ['id', 'userId', 'commentMessage', 'createdAt'],
         where: {
           goodsId: req.params.id,
         }
@@ -41,8 +41,7 @@ module.exports = async (req, res) => {
       where: comments[i].userId,
     });
 
-    console.log(findUser.id);
-
+    oneComment.commentId = comments[i].id;
     oneComment.userId = comments[i].userId;
     oneComment.nick = findUser.nick;
     oneComment.commentMessage = comments[i].commentMessage;
