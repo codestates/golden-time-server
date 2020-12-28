@@ -1,6 +1,6 @@
 const bcrypt = require('bcrypt');
 const { User } = require('../../models');
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { password, newPassword } = req.body;
@@ -20,6 +20,6 @@ module.exports = async (req, res) => {
       }
     }
   } catch (err) {
-    res.status(400).json({ message: '에러' });
+    next(err);
   }
 };

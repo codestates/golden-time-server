@@ -18,6 +18,7 @@ module.exports = (req, res, next) => {
           nick: user.nick,
           email: user.email,
           provider: user.provider,
+          area: user.area,
           profileImage: user.profileImage,
         },
         process.env.JWT_SECRET,

@@ -2,10 +2,6 @@ module.exports = (sequelize, DataTypes) =>
   sequelize.define(
     'goods',
     {
-      userId: {
-        type: DataTypes.INTEGER(),
-        allowNull: false,
-      },
       title: {
         type: DataTypes.STRING(100),
         allowNull: false,
@@ -22,17 +18,9 @@ module.exports = (sequelize, DataTypes) =>
         type: DataTypes.INTEGER(),
         allowNull: false,
       },
-      bidder: {
-        type: DataTypes.INTEGER(),
-        allowNull: true,
-      },
       bidPrice: {
         type: DataTypes.INTEGER(),
         allowNull: true,
-      },
-      thumbnail: {
-        type: DataTypes.INTEGER(),
-        allowNull: false,
       },
       closing_time: {
         type: DataTypes.DATE(),
