@@ -8,10 +8,11 @@ router.delete(
   '/deleteComment',
   passport.authenticate('jwt', { session: false }),
   commentsController.comments.deleteComment
+);
 router.post(
   '/addcomment',     
   passport.authenticate('jwt', { session: false }),
-  commentsController.comment.addComment,
+  commentsController.comments.addComment,
 
 );
 

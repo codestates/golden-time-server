@@ -18,7 +18,7 @@ router.patch(
   goodsController.goods.modifiedGoods,
 );
 router.get(
-  '/:id',
+  '/detail/:id',
   goodsController.goods.goodsDetail,
 );
 router.get('/', goodsController.goods.goodsList);
