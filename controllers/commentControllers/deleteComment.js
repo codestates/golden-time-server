@@ -1,6 +1,6 @@
 const { Comment } = require('../../models');
 
-module.exports = async (req, res) => {
+module.exports = async (req, res, next) => {
   try {
     const { commentId } = req.body;
     const { id } = req.user;
@@ -14,6 +14,6 @@ module.exports = async (req, res) => {
       res.status(400).json({ message: 'not authorized' });
     };
   } catch (err) {
-    res.status(400).json({ message: 'failed' });
+    next(err);
   }
 };

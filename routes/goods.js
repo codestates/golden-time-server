@@ -27,5 +27,10 @@ router.post(
   passport.authenticate('jwt', { session: false }),
   goodsController.goods.deleteGoods,
 );
+router.patch(
+  '/bid',
+  passport.authenticate('jwt', { session: false }),
+  goodsController.goods.goodsBid,
+);
 
 module.exports = router;
