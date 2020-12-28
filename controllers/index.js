@@ -1,5 +1,5 @@
 exports.auth = require('./authControllers');
 exports.goods = require('./goodsControllers');
-// exports.comments = require();
+exports.comment = require('./commentControllers');
 // exports.category = require();
 // exports.search = require();
