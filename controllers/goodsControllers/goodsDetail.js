@@ -35,6 +35,7 @@ module.exports = async (req, res) => {
   });
 
   const commentUserInfo = [];
+  
   for (let i = 0; i < comments.length; i += 1) {
     let oneComment = {};
 
