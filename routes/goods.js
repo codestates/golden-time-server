@@ -17,6 +17,10 @@ router.patch(
   upload.any('img'),
   goodsController.goods.modifiedGoods,
 );
+router.get(
+  '/:id',
+  goodsController.goods.goodsDetail,
+);
 router.get('/', goodsController.goods.goodsList);
 router.post(
   '/delete',
