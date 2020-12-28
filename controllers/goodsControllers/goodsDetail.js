@@ -51,12 +51,20 @@ module.exports = async (req, res) => {
     commentUserInfo.push(oneComment);
   };
 
+  let bidderInfo = {};
+
+  if (bidder) {
+    let findBidder = await User.findOne({ where: { id: bidder } });
+    let { id, nick } = findBidder;
+    bidderInfo.id = id;
+    bidderInfo.nick = nick;
+  };
+
   res.status(200)
   .json({
     id,
     title,
     text,
-    bidder,
     price,
     bidPrice,
     closing_time,
@@ -67,5 +75,6 @@ module.exports = async (req, res) => {
       nick: userInfo.nick,
       profile_image: userInfo.profileImage,
     },
+    bidder: bidderInfo,
   });
 };
