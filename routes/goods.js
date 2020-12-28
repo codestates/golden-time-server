@@ -18,5 +18,10 @@ router.patch(
   goodsController.goods.modifiedGoods,
 );
 router.get('/', goodsController.goods.goodsList);
+router.post(
+  '/delete',
+  passport.authenticate('jwt', { session: false }),
+  goodsController.goods.deleteGoods,
+);
 
 module.exports = router;
