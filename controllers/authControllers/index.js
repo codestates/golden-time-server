@@ -5,3 +5,4 @@ exports.userInfo = require('./userInfo');
 exports.google = require('./google');
 exports.kakao = require('./kakao');
 exports.modifiedUser = require('./modifiedUser');
+exports.modifiedPassword = require('./modifiedPassword');

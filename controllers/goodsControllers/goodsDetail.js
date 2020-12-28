@@ -52,7 +52,7 @@ module.exports = async (req, res) => {
   };
 
   let bidderInfo = {};
-
+  
   if (bidder) {
     let findBidder = await User.findOne({ where: { id: bidder } });
     let { id, nick } = findBidder;
