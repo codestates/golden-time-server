@@ -12,10 +12,12 @@ module.exports = async (req, res, next) => {
     );
     const kakaoAccessToken = kakaoTokenRequest.data.access_token;
     const kakaoUserInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
+
       headers: {
         Authorization: `Bearer ${kakaoAccessToken}`,
       },
     });
+
     const kakao = kakaoUserInfo.data;
     const email = kakao.kakao_account.email;
     const nick = kakao.properties.nickname;
@@ -45,10 +47,12 @@ module.exports = async (req, res, next) => {
       { expiresIn: '7d' },
     );
 
+
     res
       .status(200)
       .cookie('access_token', localToken)
       .json({ access_token: localToken, redirect_url: '/' });
+
   } catch (err) {
     next(err);
   }
