@@ -14,6 +14,7 @@ router.post(
 router.patch(
   '/modified',
   passport.authenticate('jwt', { session: false }),
+  upload.any('img'),
   goodsController.goods.modifiedGoods,
 );
 router.get('/', goodsController.goods.goodsList);

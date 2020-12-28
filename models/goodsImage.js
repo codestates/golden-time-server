@@ -6,12 +6,9 @@ module.exports = (sequelize, DataTypes) =>
         type: DataTypes.STRING(),
         allowNull: false,
       },
-      goodsId: {
-        type: DataTypes.INTEGER(),
-        allowNull: false,
-      },
     },
     {
       paranoid: true,
+      timestamps: false,
     },
   );

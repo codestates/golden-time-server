@@ -53,6 +53,19 @@ app.use('/comments', commentsRouter);
 app.use('/category', categoryRouter);
 app.use('/search', searchRouter);
 
+app.use((req, res, next) => {
+  const err = new Error('Not Found');
+  err.status = 404;
+  next(err);
+});
+
+app.use((err, req, res) => {
+  res.locals.message = err.message;
+  res.locals.error = process.env.NODE_ENV === 'development' ? err : {};
+  res.status(err.status || 500);
+  res.json({ redirect_url: '/error' });
+});
+
 app.listen(PORT, () => {
   console.log(`${PORT}번 포트에서 서버 대기 중`);
 });
