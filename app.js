@@ -18,7 +18,7 @@ const app = express();
 sequelize.sync();
 configPassport(passport);
 
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 8088);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(logger('combine'));
@@ -30,7 +30,7 @@ app.use(express.json());
 app.use(
   cors({
     origin: ['http://localhost:3000'],
-    methods: ['GET', 'POST', 'OPTIONS', 'PATCH'],
+    methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'DELETE'],
     credentials: true,
   }),
 );
