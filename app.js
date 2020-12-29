@@ -18,9 +18,13 @@ const app = express();
 sequelize.sync();
 configPassport(passport);
 
-const { PORT, COOKIE_SECRET } = process.env;
+app.set('port', process.env.PORT || 8080);
 
-app.use(logger('dev'));
+if (process.env.NODE_ENV === 'production') {
+  app.use(logger('combine'));
+} else {
+  app.use(logger('dev'));
+}
 app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
@@ -30,12 +34,12 @@ app.use(
     credentials: true,
   }),
 );
-app.use(cookieParser(COOKIE_SECRET));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(
   session({
     resave: false,
     saveUninitialized: true,
-    secret: COOKIE_SECRET,
+    secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,
       secure: false,
@@ -66,6 +70,6 @@ app.use((err, req, res) => {
   res.json({ redirect_url: '/error' });
 });
 
-app.listen(PORT, () => {
-  console.log(`${PORT}번 포트에서 서버 대기 중`);
+app.listen(app.get('port'), () => {
+  console.log(`${app.get('port')}번 포트에서 서버 대기 중`);
 });

@@ -7,12 +7,12 @@ const router = express.Router();
 router.delete(
   '/deleteComment',
   passport.authenticate('jwt', { session: false }),
-  commentsController.comments.deleteComment
+  commentsController.comments.deleteComment,
+);
 router.post(
-  '/addcomment',     
+  '/addcomment',
   passport.authenticate('jwt', { session: false }),
-  commentsController.comment.addComment,
-
+  commentsController.comments.addComment,
 );
 
 module.exports = router;
