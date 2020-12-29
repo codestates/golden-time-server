@@ -2,7 +2,7 @@ const { Comment } = require('../../models');
 
 module.exports = async (req, res) => {
   const { goodsId, commentMessage } = req.body;
-  const { id } = req.user;
+  const { id, nick, profileImage } = req.user;
 
   let comment = await Comment.create({
     userId: id,
@@ -12,12 +12,13 @@ module.exports = async (req, res) => {
 
   res.status(200)
   .json({ 
-    message: "completed",
-    commentInfo: {
-      commentId: comment.id,
-      userId: comment.userId,
-      commentMessage: comment.commentMessage,
-      goodsId: comment.goodsId,
+    commentId: comment.id,
+    commentMessage: comment.commentMessage,
+    createdAt: comment.createdAt,
+    user: {
+      id,
+      nick,
+      profileImage,
     }
   });
 };
