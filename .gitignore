@@ -4,4 +4,4 @@ node_modules
 uploads
 package-lock.json
 .prettierrc
-.eslint.json
+.eslintrc.json

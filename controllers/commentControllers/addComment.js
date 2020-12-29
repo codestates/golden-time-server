@@ -7,17 +7,16 @@ module.exports = async (req, res) => {
   let comment = await Comment.create({
     userId: id,
     commentMessage,
-    goodsId,
+    goodId: goodsId,
   });
 
-  res.status(200)
-  .json({ 
-    message: "completed",
+  res.status(200).json({
+    message: 'completed',
     commentInfo: {
       commentId: comment.id,
       userId: comment.userId,
       commentMessage: comment.commentMessage,
-      goodsId: comment.goodsId,
-    }
+      goodsId: comment.goodId,
+    },
   });
 };
