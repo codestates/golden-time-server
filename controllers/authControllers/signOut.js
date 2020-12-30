@@ -6,6 +6,6 @@ module.exports = (req, res, next) => {
     res.clearCookie();
     res.send({ message: 'successfully LOGOUT!' });
   } catch (err) {
-    next(err)
+    next(err);
   }
 };
