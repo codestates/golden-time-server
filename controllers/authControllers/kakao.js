@@ -12,13 +12,13 @@ module.exports = async (req, res, next) => {
     );
     const kakaoAccessToken = kakaoTokenRequest.data.access_token;
     const kakaoUserInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
-
       headers: {
         Authorization: `Bearer ${kakaoAccessToken}`,
       },
     });
 
     const kakao = kakaoUserInfo.data;
+    const snsId = kakao.id;
     const email = kakao.kakao_account.email;
     const nick = kakao.properties.nickname;
     const profileImage = kakao.properties.thumbnail_image;
@@ -26,6 +26,7 @@ module.exports = async (req, res, next) => {
     const userRegister = await User.findOrCreate({
       where: { email },
       defaults: {
+        snsId,
         email,
         nick,
         profileImage,
@@ -47,12 +48,10 @@ module.exports = async (req, res, next) => {
       { expiresIn: '7d' },
     );
 
-
     res
       .status(200)
       .cookie('access_token', localToken)
       .json({ access_token: localToken, redirect_url: '/' });
-
   } catch (err) {
     next(err);
   }

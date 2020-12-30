@@ -5,6 +5,7 @@ module.exports = async (req, res, next) => {
     const { goodsId, commentMessage } = req.body;
     const { id, nick, profileImage } = req.user;
 
+
     let comment = await Comment.create({
       userId: id,
       commentMessage,
@@ -15,6 +16,7 @@ module.exports = async (req, res, next) => {
     .json({ 
       commentId: comment.id,
       commentMessage: comment.commentMessage,
+      goodsId: comment.goodId,
       createdAt: comment.createdAt,
       user: {
         id,

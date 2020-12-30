@@ -10,7 +10,6 @@ const { sequelize } = require('./models');
 const authRouter = require('./routes/auth');
 const goodsRouter = require('./routes/goods');
 const commentsRouter = require('./routes/comments');
-const categoryRouter = require('./routes/category');
 const searchRouter = require('./routes/search');
 const configPassport = require('./passport');
 
@@ -18,7 +17,7 @@ const app = express();
 sequelize.sync();
 configPassport(passport);
 
-app.set('port', process.env.PORT || 8080);
+app.set('port', process.env.PORT || 8088);
 
 if (process.env.NODE_ENV === 'production') {
   app.use(logger('combine'));
@@ -54,7 +53,6 @@ app.use('/uploads', express.static('./uploads'));
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
 app.use('/comments', commentsRouter);
-app.use('/category', categoryRouter);
 app.use('/search', searchRouter);
 
 app.use((req, res, next) => {
