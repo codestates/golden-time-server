@@ -18,7 +18,7 @@ router.patch(
   goodsController.goods.modifiedGoods,
 );
 router.get(
-  '/:id',
+  '/detail/:id',
   goodsController.goods.goodsDetail,
 );
 router.get('/', goodsController.goods.goodsList);
@@ -26,6 +26,11 @@ router.post(
   '/delete',
   passport.authenticate('jwt', { session: false }),
   goodsController.goods.deleteGoods,
+);
+router.patch(
+  '/bid',
+  passport.authenticate('jwt', { session: false }),
+  goodsController.goods.goodsBid,
 );
 
 module.exports = router;
