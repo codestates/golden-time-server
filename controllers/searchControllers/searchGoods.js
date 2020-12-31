@@ -16,6 +16,7 @@ module.exports = async (req, res, next) => {
         'title',
         'text',
         'price',
+        'bidPrice',
         'categoryId',
         'closing_time',
       ],

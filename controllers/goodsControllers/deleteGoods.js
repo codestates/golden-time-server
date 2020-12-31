@@ -1,6 +1,6 @@
-const fs = require("fs");
-const path = require("path");
-const { Goods, GoodsImage } = require("../../models");
+const fs = require('fs');
+const path = require('path');
+const { Goods, GoodsImage } = require('../../models');
 
 module.exports = async (req, res, next) => {
   try {
@@ -8,11 +8,11 @@ module.exports = async (req, res, next) => {
 
     const images = await GoodsImage.findAll({
       where: { goodId: goodsId },
-      attributes: ["imagePath"],
+      attributes: ['imagePath'],
     });
     for (let i = 0; i < images.length; i++) {
-      if (images[i].imagePath && images[i].imagePath.includes("uploads")) {
-        fs.unlink(path.join(__dirname, "../..", images[i].imagePath), (err) => {
+      if (images[i].imagePath && images[i].imagePath.includes('uploads')) {
+        fs.unlink(path.join(__dirname, '../..', images[i].imagePath), (err) => {
           if (err) throw err;
         });
       }
@@ -23,7 +23,7 @@ module.exports = async (req, res, next) => {
       force: true,
     });
 
-    res.status(200).json({ redirect_url: "/" });
+    res.status(200).json({ redirect_url: '/' });
   } catch (err) {
     next(err);
   }

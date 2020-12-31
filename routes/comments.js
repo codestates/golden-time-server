@@ -7,7 +7,7 @@ const router = express.Router();
 router.delete(
   '/deleteComment',
   passport.authenticate('jwt', { session: false }),
-  commentsController.comments.deleteComment
+  commentsController.comments.deleteComment,
 );
 router.post(
   '/addcomment',

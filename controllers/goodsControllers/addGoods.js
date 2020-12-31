@@ -1,23 +1,25 @@
-const { Goods, GoodsImage } = require("../../models");
+const { Goods, GoodsImage } = require('../../models');
 
 module.exports = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { title, text, price, categoryId, closing_time } = req.body;
+
+    console.log(req.files);
     const goods = await Goods.create({
       userId: id,
       title,
       text,
       price,
       categoryId,
-      thumbnail: req.files[0].path,
+      thumbnail: req.files[0].location,
       closing_time,
     });
 
     const imageUpload = req.files.reduce((acc, file) => {
       const fileObject = {};
       fileObject.goodId = goods.id;
-      fileObject.imagePath = file.path;
+      fileObject.imagePath = file.location;
       acc.push(fileObject);
       return acc;
     }, []);
