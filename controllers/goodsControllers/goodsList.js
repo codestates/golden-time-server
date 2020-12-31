@@ -1,13 +1,22 @@
-const { User, Goods } = require('../../models');
+const { User, Goods } = require("../../models");
+const { Op } = require("sequelize");
 
 module.exports = async (req, res, next) => {
   try {
+    const { area } = req.body;
+    const filterArea = await User.findAll({
+      where: { area: area ? area : { [Op.not]: null } },
+    });
+
+    const filterUser = filterArea.map((user) => user.id);
+    console.log(filterUser);
     const goods = await Goods.findAll({
-      attributes: ['id', 'title', 'text', 'price', 'categoryId', 'createdAt'],
+      attributes: ["id", "title", "text", "price", "categoryId", "createdAt"],
+      where: { [Op.or]: [{ userId: [...filterUser] }] },
       include: [
         {
           model: User,
-          attributes: ['id', 'nick', 'profileImage'],
+          attributes: ["id", "nick", "profileImage"],
         },
       ],
     });

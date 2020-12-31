@@ -1,4 +1,4 @@
-const { Goods, GoodsImage } = require('../../models');
+const { Goods, GoodsImage } = require("../../models");
 
 module.exports = async (req, res, next) => {
   try {
@@ -14,12 +14,16 @@ module.exports = async (req, res, next) => {
       closing_time,
     });
 
-    for (let i = 0; i < req.files.length; i++) {
-      await GoodsImage.create({
-        goodId: goods.id,
-        imagePath: req.files[i].path,
-      });
-    }
+    const imageUpload = req.files.reduce((acc, file) => {
+      const fileObject = {};
+      fileObject.goodId = goods.id;
+      fileObject.imagePath = file.path;
+      acc.push(fileObject);
+      return acc;
+    }, []);
+
+    await GoodsImage.bulkCreate(imageUpload);
+
     res.status(200).json({ redirect_url: `/goods/detail/${goods.id}` });
   } catch (err) {
     next(err);
