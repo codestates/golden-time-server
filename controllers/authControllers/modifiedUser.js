@@ -1,32 +1,32 @@
-require("dotenv").config();
-const jwt = require("jsonwebtoken");
-const fs = require("fs");
-const path = require("path");
-const { User } = require("../../models");
+require('dotenv').config();
+const jwt = require('jsonwebtoken');
+const { s3 } = require('../../routes/middleware');
+const { User } = require('../../models');
 
 module.exports = async (req, res, next) => {
   try {
     const { nick } = req.body;
     const findImage = await User.findOne({
       where: { id: req.user.id },
-      attributes: ["profileImage"],
+      attributes: ['profileImage'],
     });
-
-    if (
-      req.file &&
-      findImage.profileImage &&
-      findImage.profileImage.includes("uploads")
-    ) {
-      fs.unlink(
-        path.join(__dirname, "../..", findImage.profileImage),
-        (err) => {
-          if (err) throw err;
-        }
-      );
+    const fileUrl = findImage.profileImage.split('/');
+    const delFileName = fileUrl[fileUrl.length - 1];
+    const params = {
+      Bucket: 'golden-time-image',
+      Key: delFileName,
+    };
+    if (req.file && findImage.profileImage) {
+      s3.deleteObject(params, (err) => {
+        if (err) return next(err);
+      });
     }
     await User.update(
-      { nick, profileImage: req.file ? req.file.path : findImage.profileImage },
-      { where: { id: req.user.id } }
+      {
+        nick,
+        profileImage: req.file ? req.file.location : findImage.profileImage,
+      },
+      { where: { id: req.user.id } },
     );
     const updateInfo = await User.findOne({ where: { id: req.user.id } });
     const token = jwt.sign(
@@ -38,9 +38,9 @@ module.exports = async (req, res, next) => {
         profileImage: updateInfo.profileImage,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "7d" }
+      { expiresIn: '7d' },
     );
-    res.status(200).cookie("access_token", token).json({ access_token: token });
+    res.status(200).cookie('access_token', token).json({ access_token: token });
   } catch (err) {
     next(err);
   }

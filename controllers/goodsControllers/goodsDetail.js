@@ -1,4 +1,4 @@
-const { User, Goods, GoodsImage, Comment } = require("../../models");
+const { User, Goods, GoodsImage, Comment } = require('../../models');
 
 module.exports = async (req, res) => {
   const findGoods = await Goods.findAll({
@@ -6,26 +6,26 @@ module.exports = async (req, res) => {
       {
         model: GoodsImage,
         required: false,
-        attributes: ["imagePath"],
+        attributes: ['imagePath'],
         where: {
           goodId: req.params.id,
         },
       },
       {
         model: User,
-        attributes: ["id", "nick", "profileImage"],
+        attributes: ['id', 'nick', 'profileImage'],
       },
       {
         model: Comment,
         required: false,
-        attributes: ["id", "userId", "commentMessage", "createdAt"],
+        attributes: ['id', 'userId', 'commentMessage', 'createdAt'],
         where: {
           goodId: req.params.id,
         },
         include: [
           {
             model: User,
-            attributes: ["id", "nick", "profileImage", "createdAt"],
+            attributes: ['id', 'nick', 'profileImage', 'createdAt'],
           },
         ],
       },
@@ -33,9 +33,17 @@ module.exports = async (req, res) => {
     where: {
       id: req.params.id,
     },
-    attributes: ["id", "title", "text", "price", "bidPrice", "closing_time"],
+    attributes: [
+      'id',
+      'title',
+      'text',
+      'price',
+      'bidPrice',
+      'closing_time',
+      'bidder',
+    ],
   });
-  const { bidder } = findGoods;
+  const { bidder } = findGoods[0];
 
   const bidderInfo = { bidder: {} };
 

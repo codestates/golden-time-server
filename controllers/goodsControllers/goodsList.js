@@ -1,5 +1,5 @@
-const { User, Goods } = require("../../models");
-const { Op } = require("sequelize");
+const { User, Goods } = require('../../models');
+const { Op } = require('sequelize');
 
 module.exports = async (req, res, next) => {
   try {
@@ -11,12 +11,20 @@ module.exports = async (req, res, next) => {
     const filterUser = filterArea.map((user) => user.id);
     console.log(filterUser);
     const goods = await Goods.findAll({
-      attributes: ["id", "title", "text", "price", "categoryId", "createdAt"],
+      attributes: [
+        'id',
+        'title',
+        'text',
+        'price',
+        'bidPrice',
+        'categoryId',
+        'createdAt',
+      ],
       where: { [Op.or]: [{ userId: [...filterUser] }] },
       include: [
         {
           model: User,
-          attributes: ["id", "nick", "profileImage"],
+          attributes: ['id', 'nick', 'profileImage'],
         },
       ],
     });

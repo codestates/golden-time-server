@@ -1,4 +1,4 @@
-const { Goods } = require("../../models");
+const { Goods } = require('../../models');
 
 module.exports = async (req, res, next) => {
   try {
@@ -9,10 +9,13 @@ module.exports = async (req, res, next) => {
         bidPrice,
         bidder: req.user.id,
       },
-      { where: { id: goodsId } }
+      { where: { id: goodsId } },
     );
 
-    res.status(200).json({ bidder: req.user.nick, bidPrice: bidPrice });
+    res.status(200).json({
+      bidder: { id: req.user.id, nick: req.user.nick },
+      bidPrice: bidPrice,
+    });
   } catch (err) {
     next(err);
   }

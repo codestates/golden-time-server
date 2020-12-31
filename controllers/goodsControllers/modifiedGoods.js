@@ -1,6 +1,5 @@
-const fs = require("fs");
-const path = require("path");
-const { GoodsImage, Goods } = require("../../models");
+const { s3 } = require('../../routes/middleware');
+const { GoodsImage, Goods } = require('../../models');
 
 module.exports = async (req, res, next) => {
   try {
@@ -9,27 +8,30 @@ module.exports = async (req, res, next) => {
     const imageFiles = req.files;
     const findImages = await GoodsImage.findAll({
       where: { goodId: id },
-      attributes: ["imagePath"],
+      attributes: ['imagePath'],
     });
 
     if (req.files) {
+      const fileUrls = [];
       for (let i = 0; i < findImages.length; i++) {
-        if (
-          findImages[i].imagePath &&
-          findImages[i].imagePath.includes("uploads")
-        ) {
-          fs.unlink(
-            path.join(__dirname, "../..", findImages[i].imagePath),
-            (err) => {
-              if (err) throw err;
-            }
-          );
+        if (findImages[i].imagePath) {
+          const fileUrl = findImages[i].imagePath.split('/');
+          const delFileName = fileUrl[fileUrl.length - 1];
+          fileUrls.push({ Key: delFileName });
         }
       }
+      const params = {
+        Bucket: 'golden-time-image',
+        Delete: { Objects: fileUrls },
+      };
+      console.log(params);
+      s3.deleteObjects(params, (err) => {
+        if (err) return next(err);
+      });
       const imageArray = imageFiles.reduce((acc, img) => {
         const obj = {};
         obj.goodId = id;
-        obj.imagePath = img.path;
+        obj.imagePath = img.location;
         acc.push(obj);
         return acc;
       }, []);
