@@ -9,7 +9,6 @@ module.exports = async (req, res, next) => {
     });
 
     const filterUser = filterArea.map((user) => user.id);
-    console.log(filterUser);
     const goods = await Goods.findAll({
       attributes: [
         'id',
@@ -17,6 +16,7 @@ module.exports = async (req, res, next) => {
         'text',
         'price',
         'bidPrice',
+        'thumbnail',
         'categoryId',
         'createdAt',
       ],

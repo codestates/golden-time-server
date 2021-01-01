@@ -4,3 +4,4 @@ exports.goodsDetail = require('./goodsDetail');
 exports.goodsList = require('./goodsList');
 exports.deleteGoods = require('./deleteGoods');
 exports.goodsBid = require('./goodsBid');
+exports.myGooods = require('./myGoods');

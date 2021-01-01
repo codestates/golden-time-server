@@ -15,8 +15,12 @@ module.exports = (sequelize, DataTypes) =>
         allowNull: false,
       },
       categoryId: {
-        type: DataTypes.INTEGER(),
+        type: DataTypes.STRING(),
         allowNull: false,
+      },
+      thumbnail: {
+        type: DataTypes.STRING(),
+        allowNull: true,
       },
       bidPrice: {
         type: DataTypes.INTEGER(),
