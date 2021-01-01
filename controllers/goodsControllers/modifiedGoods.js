@@ -11,7 +11,7 @@ module.exports = async (req, res, next) => {
       attributes: ['imagePath'],
     });
 
-    if (req.files) {
+    if (req.files.length) {
       const fileUrls = [];
       for (let i = 0; i < findImages.length; i++) {
         if (findImages[i].imagePath) {
@@ -24,7 +24,6 @@ module.exports = async (req, res, next) => {
         Bucket: 'golden-time-image',
         Delete: { Objects: fileUrls },
       };
-      console.log(params);
       s3.deleteObjects(params, (err) => {
         if (err) return next(err);
       });
@@ -37,6 +36,10 @@ module.exports = async (req, res, next) => {
       }, []);
       await GoodsImage.destroy({ where: { goodId: id } });
       await GoodsImage.bulkCreate(imageArray);
+      await Goods.update(
+        { thumbnail: imageArray[0].imagePath },
+        { where: { id: imageArray[0].goodId } },
+      );
     }
 
     await Goods.update({ title, text }, { where: { id } });

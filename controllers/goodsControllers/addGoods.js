@@ -5,7 +5,6 @@ module.exports = async (req, res, next) => {
     const { id } = req.user;
     const { title, text, price, categoryId, closing_time } = req.body;
 
-    console.log(req.files);
     const goods = await Goods.create({
       userId: id,
       title,

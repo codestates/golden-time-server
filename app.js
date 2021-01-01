@@ -42,13 +42,13 @@ app.use(
     cookie: {
       httpOnly: true,
       secure: false,
+      sameSite: 'none',
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
   }),
 );
 app.use(passport.initialize());
 app.use(passport.session());
-app.use('/uploads', express.static('./uploads'));
 
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
@@ -68,6 +68,4 @@ app.use((err, req, res) => {
   res.json({ redirect_url: '/error' });
 });
 
-app.listen(app.get('port'), () => {
-  console.log(`${app.get('port')}번 포트에서 서버 대기 중`);
-});
+app.listen(app.get('port'));

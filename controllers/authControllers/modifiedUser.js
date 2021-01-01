@@ -10,13 +10,14 @@ module.exports = async (req, res, next) => {
       where: { id: req.user.id },
       attributes: ['profileImage'],
     });
-    const fileUrl = findImage.profileImage.split('/');
-    const delFileName = fileUrl[fileUrl.length - 1];
-    const params = {
-      Bucket: 'golden-time-image',
-      Key: delFileName,
-    };
+
     if (req.file && findImage.profileImage) {
+      const fileUrl = findImage.profileImage.split('/');
+      const delFileName = fileUrl[fileUrl.length - 1];
+      const params = {
+        Bucket: 'golden-time-image',
+        Key: delFileName,
+      };
       s3.deleteObject(params, (err) => {
         if (err) return next(err);
       });
