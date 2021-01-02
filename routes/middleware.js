@@ -1,20 +1,28 @@
-const fs = require('fs');
-const path = require('path');
+require('dotenv').config();
+const aws = require('aws-sdk');
 const multer = require('multer');
+const multerS3 = require('multer-s3');
 
-fs.readdir('uploads', (err) => {
-  if (err) fs.mkdirSync('uploads');
+const s3 = new aws.S3({
+  accessKeyId: process.env.AWS_ACCESS_KEY,
+  secretAccessKey: process.env.AWS_SECRET_KEY,
+  region: process.env.AWS_REGION,
 });
 
-exports.upload = multer({
-  storage: multer.diskStorage({
-    destination: (req, file, cb) => {
-      cb(null, 'uploads/');
+const upload = multer({
+  storage: multerS3({
+    s3: s3,
+    bucket: 'golden-time-image',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    acl: 'public-read',
+    metadata: (req, file, cb) => {
+      cb(null, { fieldName: file.fieldname });
     },
-    filename: (req, file, cb) => {
-      const ext = path.extname(file.originalname);
-      const name = path.basename(file.originalname, ext);
-      cb(null, `${Date.now()}-${name}${ext}`);
+    key: (req, file, cb) => {
+      const ext = file.originalname;
+      cb(null, Date.now().toString() + ext);
     },
   }),
 });
+
+module.exports = { s3, upload };

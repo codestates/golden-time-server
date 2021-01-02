@@ -1,5 +1,3 @@
-const fs = require('fs');
-
 module.exports = (req, res) => {
   const { id, email, nick, profileImage, provider, area, createdAt } = req.user;
 

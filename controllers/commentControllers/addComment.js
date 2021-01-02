@@ -1,23 +1,27 @@
 const { Comment } = require('../../models');
 
-module.exports = async (req, res) => {
-  const { goodsId, commentMessage } = req.body;
-  const { id } = req.user;
+module.exports = async (req, res, next) => {
+  try {
+    const { goodsId, commentMessage } = req.body;
+    const { id, nick, profileImage } = req.user;
 
-  let comment = await Comment.create({
-    userId: id,
-    commentMessage,
-    goodsId,
-  });
+    let comment = await Comment.create({
+      userId: id,
+      commentMessage,
+      goodId: goodsId,
+    });
 
-  res.status(200)
-  .json({ 
-    message: "completed",
-    commentInfo: {
+    res.status(200).json({
       commentId: comment.id,
-      userId: comment.userId,
       commentMessage: comment.commentMessage,
-      goodsId: comment.goodsId,
-    }
-  });
+      createdAt: comment.createdAt,
+      user: {
+        id,
+        nick,
+        profileImage,
+      },
+    });
+  } catch (err) {
+    next(err);
+  }
 };

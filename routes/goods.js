@@ -17,15 +17,22 @@ router.patch(
   upload.any('img'),
   goodsController.goods.modifiedGoods,
 );
-router.get(
-  '/:id',
-  goodsController.goods.goodsDetail,
-);
-router.get('/', goodsController.goods.goodsList);
+router.get('/detail/:id', goodsController.goods.goodsDetail);
+router.post('/', goodsController.goods.goodsList);
 router.post(
   '/delete',
   passport.authenticate('jwt', { session: false }),
   goodsController.goods.deleteGoods,
+);
+router.patch(
+  '/bid',
+  passport.authenticate('jwt', { session: false }),
+  goodsController.goods.goodsBid,
+);
+router.get(
+  '/mygoods',
+  passport.authenticate('jwt', { session: false }),
+  goodsController.goods.myGooods,
 );
 
 module.exports = router;

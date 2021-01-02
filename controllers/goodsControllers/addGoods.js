@@ -4,22 +4,27 @@ module.exports = async (req, res, next) => {
   try {
     const { id } = req.user;
     const { title, text, price, categoryId, closing_time } = req.body;
+
     const goods = await Goods.create({
       userId: id,
       title,
       text,
       price,
       categoryId,
-      thumbnail: req.files[0].path,
+      thumbnail: req.files[0].location,
       closing_time,
     });
 
-    for (let i = 0; i < req.files.length; i++) {
-      await GoodsImage.create({
-        goodId: goods.id,
-        imagePath: req.files[i].path,
-      });
-    }
+    const imageUpload = req.files.reduce((acc, file) => {
+      const fileObject = {};
+      fileObject.goodId = goods.id;
+      fileObject.imagePath = file.location;
+      acc.push(fileObject);
+      return acc;
+    }, []);
+
+    await GoodsImage.bulkCreate(imageUpload);
+
     res.status(200).json({ redirect_url: `/goods/detail/${goods.id}` });
   } catch (err) {
     next(err);

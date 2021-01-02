@@ -37,7 +37,6 @@ module.exports = async (req, res, next) => {
       process.env.JWT_SECRET,
       { expiresIn: '7d' },
     );
-    console.log(token);
     res.status(200).cookie('access_token', token).json({ access_token: token });
   } catch (err) {
     next(err);

@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+const { s3 } = require('../../routes/middleware');
 const { GoodsImage, Goods } = require('../../models');
 
 module.exports = async (req, res, next) => {
@@ -11,29 +10,40 @@ module.exports = async (req, res, next) => {
       where: { goodId: id },
       attributes: ['imagePath'],
     });
-    for (let i = 0; i < findImages.length; i++) {
-      if (
-        findImages[i].imagePath &&
-        findImages[i].imagePath.includes('uploads')
-      ) {
-        fs.unlink(
-          path.join(__dirname, '../..', findImages[i].imagePath),
-          (err) => {
-            if (err) throw err;
-          },
-        );
+
+    if (req.files.length) {
+      const fileUrls = [];
+      for (let i = 0; i < findImages.length; i++) {
+        if (findImages[i].imagePath) {
+          const fileUrl = findImages[i].imagePath.split('/');
+          const delFileName = fileUrl[fileUrl.length - 1];
+          fileUrls.push({ Key: delFileName });
+        }
       }
+      const params = {
+        Bucket: 'golden-time-image',
+        Delete: { Objects: fileUrls },
+      };
+      s3.deleteObjects(params, (err) => {
+        if (err) return next(err);
+      });
+      const imageArray = imageFiles.reduce((acc, img) => {
+        const obj = {};
+        obj.goodId = id;
+        obj.imagePath = img.location;
+        acc.push(obj);
+        return acc;
+      }, []);
+      await GoodsImage.destroy({ where: { goodId: id } });
+      await GoodsImage.bulkCreate(imageArray);
+      await Goods.update(
+        { thumbnail: imageArray[0].imagePath },
+        { where: { id: imageArray[0].goodId } },
+      );
     }
-    const imageArray = imageFiles.reduce((acc, img) => {
-      const obj = {};
-      obj.goodId = id;
-      obj.imagePath = img.path;
-      acc.push(obj);
-      return acc;
-    }, []);
+
     await Goods.update({ title, text }, { where: { id } });
-    await GoodsImage.destroy({ where: { goodId: id }, truncate: true });
-    await GoodsImage.bulkCreate(imageArray);
+
     const updateGoods = await Goods.findOne({ where: { id } });
     res.status(200).json({ redirct_url: `/detail/${updateGoods.id}` });
   } catch (err) {
