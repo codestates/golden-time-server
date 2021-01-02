@@ -11,6 +11,7 @@ module.exports = async (req, res, next) => {
         'thumbnail',
         'price',
         'bidPrice',
+        'categoryId',
         'closing_time',
       ],
       include: [

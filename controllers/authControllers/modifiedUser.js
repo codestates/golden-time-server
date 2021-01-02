@@ -36,6 +36,7 @@ module.exports = async (req, res, next) => {
         nick: updateInfo.nick,
         emai: updateInfo.email,
         provider: updateInfo.provider,
+        area: updateInfo.area,
         profileImage: updateInfo.profileImage,
       },
       process.env.JWT_SECRET,

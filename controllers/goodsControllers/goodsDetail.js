@@ -28,6 +28,7 @@ module.exports = async (req, res) => {
             attributes: ['id', 'nick', 'profileImage', 'createdAt'],
           },
         ],
+        order: ['createdAt', 'DESC'],
       },
     ],
     where: {
@@ -39,6 +40,7 @@ module.exports = async (req, res) => {
       'text',
       'price',
       'bidPrice',
+      'categoryId',
       'closing_time',
       'bidder',
     ],
