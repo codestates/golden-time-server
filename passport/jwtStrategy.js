@@ -12,7 +12,6 @@ module.exports = (passport) => {
       },
       async (jwt_payload, done) => {
         try {
-          console.log(jwt_payload);
           const exUser = await User.findOne({ where: { id: jwt_payload.id } });
           if (!exUser) {
             done(null, false);

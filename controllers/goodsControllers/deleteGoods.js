@@ -1,5 +1,4 @@
-const fs = require('fs');
-const path = require('path');
+const { s3 } = require('../../routes/middleware');
 const { Goods, GoodsImage } = require('../../models');
 
 module.exports = async (req, res, next) => {
@@ -10,18 +9,27 @@ module.exports = async (req, res, next) => {
       where: { goodId: goodsId },
       attributes: ['imagePath'],
     });
-    for (let i = 0; i < images.length; i++) {
-      if (images[i].imagePath && images[i].imagePath.includes('uploads')) {
-        fs.unlink(path.join(__dirname, '../..', images[i].imagePath), (err) => {
-          if (err) throw err;
-        });
+    console.log(images);
+    if (images.length) {
+      const fileUrls = [];
+      for (let i = 0; i < images.length; i++) {
+        const fileUrl = images[i].imagePath.split('/');
+        const delFileName = fileUrl[fileUrl.length - 1];
+        fileUrls.push({ Key: delFileName });
       }
+      const params = {
+        Bucket: 'golden-time-image',
+        Delete: { Objects: fileUrls },
+      };
+      s3.deleteObjects(params, (err) => {
+        if (err) return next(err);
+      });
+      await GoodsImage.destroy({
+        where: { goodId: goodsId },
+      });
     }
+
     await Goods.destroy({ where: { id: goodsId } });
-    await GoodsImage.destroy({
-      where: { goodId: goodsId },
-      force: true,
-    });
 
     res.status(200).json({ redirect_url: '/' });
   } catch (err) {
