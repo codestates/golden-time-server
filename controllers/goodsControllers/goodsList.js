@@ -28,6 +28,7 @@ module.exports = async (req, res, next) => {
           attributes: ['id', 'nick', 'profileImage'],
         },
       ],
+      order: ['createdAt', 'DESC'],
     });
     res.status(200).json(goods);
   } catch (err) {
