@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
   cors({
-    origin: ['http://golden-time.s3-website.ap-northeast-2.amazonaws.com'],
+    origin: ['https://d8vvnifrux96q.cloudfront.net', 'http://localhost:3000'],
     methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'DELETE'],
     credentials: true,
   }),
@@ -41,7 +41,7 @@ app.use(
     secret: process.env.COOKIE_SECRET,
     cookie: {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: 'none',
       maxAge: 1000 * 60 * 60 * 24 * 7,
     },
