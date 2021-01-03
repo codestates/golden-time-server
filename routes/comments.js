@@ -5,7 +5,7 @@ const passport = require('passport');
 const router = express.Router();
 
 router.delete(
-  '/deleteComment',
+  '/deletecomment',
   passport.authenticate('jwt', { session: false }),
   commentsController.comments.deleteComment,
 );

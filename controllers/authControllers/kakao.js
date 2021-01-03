@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     const { authorizationCode, area } = req.body;
 
     const kakaoTokenRequest = await axios.post(
-      `https://kauth.kakao.com/oauth/token?code=${authorizationCode}&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=http://localhost:3000&grant_type=authorization_code`,
+      `https://kauth.kakao.com/oauth/token?code=${authorizationCode}&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=http://golden-time.s3-website.ap-northeast-2.amazonaws.com&grant_type=authorization_code`,
     );
     const kakaoAccessToken = kakaoTokenRequest.data.access_token;
     const kakaoUserInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
