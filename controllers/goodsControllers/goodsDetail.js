@@ -28,7 +28,7 @@ module.exports = async (req, res) => {
             attributes: ['id', 'nick', 'profileImage', 'createdAt'],
           },
         ],
-        order: ['createdAt', 'DESC'],
+        order: [['createdAt', 'DESC']],
       },
     ],
     where: {
