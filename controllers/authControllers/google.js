@@ -7,7 +7,7 @@ module.exports = async (req, res, next) => {
   try {
     const { authorizationCode, area } = req.body;
     const googleToken = await axios.post(
-      `https://oauth2.googleapis.com/token?client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_SECRET_KEY}&code=${authorizationCode}&grant_type=authorization_code&redirect_uri=https://d8vvnifrux96q.cloudfront.net`,
+      `https://oauth2.googleapis.com/token?client_id=${process.env.GOOGLE_CLIENT_ID}&client_secret=${process.env.GOOGLE_SECRET_KEY}&code=${authorizationCode}&grant_type=authorization_code&redirect_uri=https://d1ghlpfq71z9hf.cloudfront.net/`,
     );
     const { access_token } = googleToken.data;
     const googleData = await axios.get(
