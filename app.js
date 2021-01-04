@@ -28,7 +28,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(express.json());
 app.use(
   cors({
-    origin: ['https://d8vvnifrux96q.cloudfront.net', 'http://localhost:3000'],
+    origin: ['https://d1ghlpfq71z9hf.cloudfront.net'],
     methods: ['GET', 'POST', 'OPTIONS', 'PATCH', 'DELETE'],
     credentials: true,
   }),
