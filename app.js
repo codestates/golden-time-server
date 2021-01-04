@@ -50,6 +50,7 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
+app.get('/', (req, res) => res.status(200).end());
 app.use('/auth', authRouter);
 app.use('/goods', goodsRouter);
 app.use('/comments', commentsRouter);

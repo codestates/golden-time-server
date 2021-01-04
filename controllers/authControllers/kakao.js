@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     const { authorizationCode, area } = req.body;
 
     const kakaoTokenRequest = await axios.post(
-      `https://kauth.kakao.com/oauth/token?code=${authorizationCode}&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=https://d1ghlpfq71z9hf.cloudfront.net/&grant_type=authorization_code`,
+      `https://kauth.kakao.com/oauth/token?code=${authorizationCode}&client_id=${process.env.KAKAO_CLIENT_ID}&redirect_uri=https://d1ghlpfq71z9hf.cloudfront.net&grant_type=authorization_code`,
     );
     const kakaoAccessToken = kakaoTokenRequest.data.access_token;
     const kakaoUserInfo = await axios.get('https://kapi.kakao.com/v2/user/me', {
@@ -24,7 +24,7 @@ module.exports = async (req, res, next) => {
     const profileImage = kakao.properties.thumbnail_image;
 
     const userRegister = await User.findOrCreate({
-      where: { email: email && email, snsId },
+      where: { email },
       defaults: {
         snsId,
         email,
