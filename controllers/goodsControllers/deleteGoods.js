@@ -9,7 +9,7 @@ module.exports = async (req, res, next) => {
       where: { goodId: goodsId },
       attributes: ['imagePath'],
     });
-    console.log(images);
+
     if (images.length) {
       const fileUrls = [];
       for (let i = 0; i < images.length; i++) {

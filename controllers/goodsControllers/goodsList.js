@@ -8,7 +8,7 @@ module.exports = async (req, res, next) => {
     const filterArea = await User.findAll({
       where: { area: area ? area : { [Op.not]: null } },
     });
-    console.log(req.ip);
+
     const filterUser = filterArea.map((user) => user.id);
     const goods = await Goods.findAll({
       attributes: [
